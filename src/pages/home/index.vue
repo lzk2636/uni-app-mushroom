@@ -1,12 +1,12 @@
 <template>
 	<!--pages/home/home.wxml-->
 <view class="home-container">
-
+    <search-bar :placeholder="msg"></search-bar>
 	<view class="page-body">
 		<view class="page-section page-section-spacing swiper">
 			<swiper autoplay duration="3000" circular>
 				<block v-for="(item, index) in swiperList" :key="index">
-				<navigator url="/pages/course-detail/course-detail?id={{item.id}}">
+				<navigator >
 				<swiper-item>
 						<!-- <view class="swiper-item {{item}}"> -->
 						<image :src="item.img_url"></image>
@@ -26,7 +26,7 @@
 		</view>
 		<scroll-view class="course-container" scroll-x="true" style="width: 100%">
 		<block  v-for="(item, index) in scrollList" :key="index">
-			<navigator class="course-item"  url="/pages/course-detail/course-detail?id={{item.id}}" >			
+			<navigator class="course-item" >			
 					<image :src="item.icon"></image>
 			</navigator>
 		</block>
@@ -34,19 +34,19 @@
 		</scroll-view>
 	</view>
 	<!-- 热门视频 -->
-	<!-- <view>
+	<view>
 		<view class="tips">
 			<view class="tip">热门视频</view>
 			<image src="/static/images/arrow@2x.png"></image>
 		</view>
 		<view class="hot-video">
-			<navigator  wx:key="*this"  class="video-item" wx:for="{{hotVidioList}}" url="{{item.video_url}}" open-type="redirectTo" >
-				<image src="{{item.cover_photo_url}}"> </image>
-				<text class="title"> {{item.name}}</text>
-				<text class="subtitle"> {{item.view_count}}已经观看</text>
+			<navigator   class="video-item" v-for="(item, index) in videList" :key="index" :url="item.video_url" open-type="redirectTo" >
+				<image :src="item.cover_photo_url"> </image>
+				<view class="title"> {{item.name}}</view>
+				<view class="subtitle"> {{item.view_count}}已经观看</view>
 			</navigator>
 		</view>
-	</view> -->
+	</view>
 
 
 </view>
@@ -55,22 +55,41 @@
 <script lang="ts">
   import Vue from 'vue';
   import {http} from "@/utils/http.js"
+  import searchBar from "@/components/search-bar"
 	export default Vue.extend({
+    // let seee=()=>import("@/components/search-bar"),
+   
+    components:{
+      searchBar
+    },
 		data() {
 			return {
+        msg:"输入内容",
         swiperList: [],
-        scrollList:[]
+        scrollList:[],
+        videList:[]
 			}
 		},
 		onLoad() {
       this.swiper()
       //home/course
       this.scrollView()
+      // home/video
+      this.hotVideo()
 
 
     },
     
 		methods: {
+      async hotVideo(){
+        let res=await http({
+          url:"home/video"
+        })
+        if(res.data.status===0){
+          this.videList=res.data.message
+        }
+
+      },
       async scrollView(){
         let scrollView= await http({
           url:"home/course"
