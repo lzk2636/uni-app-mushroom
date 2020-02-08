@@ -110,7 +110,9 @@
       },
       // 加载更多课程
       couseMore(){
-
+        uni.switchTab({
+          url:"/pages/course/index"
+        })
       }
 		}
 	});
