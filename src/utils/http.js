@@ -5,13 +5,13 @@ const http = ({ url, tips = "数据加载中....", isToken = true, header = {}, 
     title: tips
   })
   
-  console.log(app)
   if(isToken){
     if (app.globalData.userInfo.token) {
+      // console.log(app.globalData.userInfo.token)
       header.Authorization = app.globalData.userInfo.token
     } else {
       const value = uni.getStorageSync('my_token');
-      app.globalData.userInfo = value
+      app.globalData.userInfo.token = value
       header.Authorization = app.globalData.userInfo.token
   
     }

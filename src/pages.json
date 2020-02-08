@@ -18,6 +18,12 @@
         "navigationBarTitleText": ""
       }
     },
+    {
+      "path":"pages/course-details/index",
+      "style":{
+        "navigationBarTitleText": ""
+      }
+    },
 
     {
       "path": "pages/home/index"

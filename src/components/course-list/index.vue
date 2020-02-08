@@ -1,7 +1,7 @@
 <template>
 	<view class="course-container">
   <view class="course-item" v-for="(item, index) in couseres" :key="index">
-			<image src="{{item.icon}}" bindtap="ImageUrl" data-url="{{item.icon}}"></image>
+			<image :src="item.icon" @click="ImageUrl(item.icon)"></image>
 			<view class="title">{{item.title}}</view>
 			<view class="desc">{{item.subtitle}}</view>
 			<button plain size="mini">{{['初级','中级','高级'][item.level-1]}}</button>
@@ -18,7 +18,12 @@ export default Vue.extend({
       type:Array,
       default:[]
     }
-  }
+  },
+  methods: {
+    ImageUrl(){
+
+    }
+  },
 
 
 });

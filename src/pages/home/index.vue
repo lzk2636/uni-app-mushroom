@@ -6,7 +6,7 @@
 		<view class="page-section page-section-spacing swiper">
 			<swiper autoplay duration="3000" circular>
 				<block v-for="(item, index) in swiperList" :key="index">
-				<navigator >
+				<navigator :url="'/pages/course-details/index?id='+item.id" >
 				<swiper-item>
 						<!-- <view class="swiper-item {{item}}"> -->
 						<image :src="item.img_url"></image>
@@ -26,7 +26,7 @@
 		</view>
 		<scroll-view class="course-container" scroll-x="true" style="width: 100%">
 		<block  v-for="(item, index) in scrollList" :key="index">
-			<navigator class="course-item" >			
+			<navigator class="course-item" :url="'/pages/course-details/index?id='+item.relation_id" >			
 					<image :src="item.icon"></image>
 			</navigator>
 		</block>
@@ -37,10 +37,10 @@
 	<view>
 		<view class="tips">
 			<view class="tip">热门视频</view>
-			<image src="/static/images/arrow@2x.png"></image>
+			<image src="/static/images/arrow@2x.png" @click="toDetail(3)"></image>
 		</view>
 		<view class="hot-video">
-			<navigator   class="video-item" v-for="(item, index) in videList" :key="index" :url="item.video_url" open-type="redirectTo" >
+			<navigator   class="video-item" v-for="(item, index) in videList" :key="index" :url="'/pages/course-details/index?id='+item.course_id"   >
 				<image :src="item.cover_photo_url"> </image>
 				<view class="title"> {{item.name}}</view>
 				<view class="subtitle"> {{item.view_count}}已经观看</view>
@@ -81,6 +81,11 @@
     },
     
 		methods: {
+      toDetail(id){
+        uni.navigateTo({
+          url:"/pages/course-details/index?id="+id
+        })
+      },
       async hotVideo(){
         let res=await http({
           url:"home/video"
