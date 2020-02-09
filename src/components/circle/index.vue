@@ -7,8 +7,7 @@ import Vue from "vue";
 export default Vue.extend({
   props: {
     canvasId: {
-      type: Number,
-      default: 0
+      type: Number
     },
     progress: {
       type: Number,
