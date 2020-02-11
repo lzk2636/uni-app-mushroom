@@ -12,9 +12,9 @@
                 // this["$scope"].globalData.userInfo.token=token
                 scope.globalData.userInfo.token=token
                 // console.log(scope.globalData.userInfo)
-                uni.reLaunch({
-                    url:"/pages/home/index"
-                })
+                // uni.reLaunch({
+                //     url:"/pages/home/index"
+                // })
             }
         },
         onShow() {

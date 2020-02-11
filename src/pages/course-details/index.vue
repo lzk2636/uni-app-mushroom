@@ -1,6 +1,6 @@
 <template>
   <view class="course-detail-container" v-if="course_detail">
-   <!-- 1.0 封面图 -->
+    <!-- 1.0 封面图 -->
     <view>
       <view v-if="!isPlaying" class="cover_image">
         <image :src="course_detail.course.cover_image_url" alt />
@@ -21,7 +21,7 @@
       </view>
       <text class="introduce">{{course_detail.course.introduction}}</text>
       <view class="star">
-        <!-- <star :score="course_detail.course.score"></star> -->
+        <star :score="course_detail.course.score" @changeStar="chageNum"></star>
         <text>{{course_detail.course.study_count}}人在学</text>
       </view>
       <view class="study-share">
@@ -29,7 +29,7 @@
         <button open-type="share" class="share-button" plain></button>
       </view>
     </view>
-         <!-- 3.0 目录、讲师介绍、评价 -->
+    <!-- 3.0 目录、讲师介绍、评价 -->
     <view class="catalog">
       <view class="head">
         <text
@@ -95,46 +95,70 @@
       </view>
     </view>
   </view>
-
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { http } from '../../utils/http';
+import { http } from "../../utils/http";
+import star from "@/components/star";
 export default Vue.extend({
+  components: {
+    star
+  },
   data() {
     return {
-      id:0,
-      course_detail:{},
-      isPlaying:false,
-      menus:["目录","讲师介绍","评价"],
-      selectIndex:0,
-
+      id: 0,
+      course_detail: {},
+      isPlaying: false,
+      menus: ["目录", "讲师介绍", "评价"],
+      selectIndex: 0
+    };
+  },
+  onLoad(options) {
+    this.id = options.id;
+    this.currentData(this.id);
+  },
+  methods: {
+    chageNum(index) {
+      this.course_detail.course.score=index
+    },
+    toggleSelect(index) {
+      this.selectIndex = index;
+    },
+    goToStudy() {},
+    // 播放视频
+    playCourseVideo() {
+      this.isPlaying = true;
+      setTimeout(() => {
+        uni.createVideoContext("courseVideoId").play();
+      }, 200);
+    },
+    async currentData(id) {
+      let res = await http({
+        url: "course/play/" + id
+      });
+      if (res.data.status === 0) {
+        this.course_detail = res.data.message;
+      }
     }
   },
-  onLoad(options){
-    this.id=options.id
-    this.currentData(this.id)
-
-  },
-  methods:{
-    toggleSelect(index){
-      this.selectIndex=index
-    },
-    goToStudy(){
-
-    },
-    // 破包视频
-    playCourseVideo(){
-      this.isPlaying=true
-    },
-    async currentData(id){
-      let res = await http({
-        url:"course/play/"+id
-      })
-      if(res.data.status===0){
-        this.course_detail=res.data.message
-      }
-
+  onShareAppMessage(res) {
+    // console.log(res)
+    if (res.from === "button") {
+      return {
+        title: "你是选择button的组件",
+        content: "呵呵看看新世界啊啊",
+        path: "/pages/home/index",
+        imageUrl:
+          "https://pics1.baidu.com/feed/e61190ef76c6a7ef9617a6db35949e57f2de668a.jpeg?token=90a7c83bbf7fdc6d4f8a6f0df0a363b0"
+      };
+    } else {
+      return {
+        title: "你选择原生的组件分享",
+        content: "看看石家街的乐趣",
+        path: "/pages/home/index",
+        imageUrl:
+          "https://www.baidu.com/img/pcpad_e247c0f9a461b6394da20e308588818f.png"
+      };
     }
   }
 });
@@ -214,6 +238,7 @@ export default Vue.extend({
       display: flex;
       margin-top: 20rpx;
       text {
+        display: block;
         height: 50rpx;
         line-height: 50rpx;
         margin-left: 20rpx;
@@ -272,7 +297,7 @@ export default Vue.extend({
         color: #333333;
         font-weight: bold;
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           left: 88rpx;
           bottom: 0px;
