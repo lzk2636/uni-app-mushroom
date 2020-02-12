@@ -125,20 +125,9 @@ export default Vue.extend({
           item.is_like = 2;
           break;
         case 2:
-          // {
-          //   const res = await http({
-          //     url: "comment/like",
-          //     method: "POST",
-          //     data: {
-          //       comment_id: item.id,
-          //       is_like: item.is_like
-          //     }
-          //   });
-          // }
           item.is_like = 1;
           break;
       }
-
       const res = await http({
         url: "comment/like",
         method: "POST",
@@ -190,7 +179,11 @@ export default Vue.extend({
     toggleSelect(index) {
       this.selectIndex = index;
     },
-    goToStudy() {},
+    goToStudy() {
+      uni.navigateTo({
+        url:"/pages/play/index?id="+this.id
+      })
+    },
     // 播放视频
     playCourseVideo() {
       this.isPlaying = true;

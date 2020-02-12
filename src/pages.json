@@ -35,6 +35,9 @@
       "path": "pages/study/index"
     },
     {
+      "path": "pages/play/index"
+    },
+    {
       "path": "pages/my/index",
       "style": {
         "navigationBarTitleText": "我的",
