@@ -21,7 +21,7 @@
       </view>
       <text class="introduce">{{course_detail.course.introduction}}</text>
       <view class="star">
-        <star :score="course_detail.course.score" @changeStar="chageNum"></star>
+        <star :score="course_detail.course.score"></star>
         <text>{{course_detail.course.study_count}}人在学</text>
       </view>
       <view class="study-share">
@@ -55,7 +55,7 @@
               <text>关注人数：{{course_detail.lecturer.follow_count}}</text>
             </view>
             <text
-              @click="followOrUnFollow(course_detail.lecturer.is_follow,course_detail.lecturer.id)"
+              @click="followOrUnFollow(course_detail.lecturer,course_detail.lecturer.id)"
               :class="[course_detail.lecturer.is_follow === 1 ? 'follow' : 'unfollow']"
             >{{course_detail.lecturer.is_follow === 1 ? '已关注' : '关注'}}</text>
           </view>
@@ -118,9 +118,75 @@ export default Vue.extend({
     this.currentData(this.id);
   },
   methods: {
-    chageNum(index) {
-      this.course_detail.course.score=index
+    async like(item) {
+      // console.log(id,is_like)
+      switch (item.is_like) {
+        case 1:
+          item.is_like = 2;
+          break;
+        case 2:
+          // {
+          //   const res = await http({
+          //     url: "comment/like",
+          //     method: "POST",
+          //     data: {
+          //       comment_id: item.id,
+          //       is_like: item.is_like
+          //     }
+          //   });
+          // }
+          item.is_like = 1;
+          break;
+      }
+
+      const res = await http({
+        url: "comment/like",
+        method: "POST",
+        data: {
+          comment_id: item.id,
+          is_like: item.is_like
+        }
+      });
     },
+    // 是不关注
+    async followOrUnFollow(followOrUnFollow, lecturer) {
+      // console.log(followOrUnFollow.is_follow)
+      switch (followOrUnFollow.is_follow) {
+        case 0: // 未关注
+          let res = await http({
+            url: "lecturer/follow",
+            method: "POST",
+            data: {
+              lecturer_id: lecturer
+            }
+          });
+          if (res.data.status === 0) {
+            // console.log(followOrUnFollow)
+            followOrUnFollow.is_follow = 1;
+            uni.showToast({
+              title: res.data.message,
+              icon: "none"
+            });
+          }
+          break;
+        default:
+          let res1 = await http({
+            url: "lecturer/unfollow",
+            method: "POST",
+            data: {
+              lecturer_id: lecturer
+            }
+          });
+          if (res1.data.status === 0) {
+            followOrUnFollow.is_follow = 0;
+            uni.showToast({
+              title: res1.data.message,
+              icon: "none"
+            });
+          }
+      }
+    },
+
     toggleSelect(index) {
       this.selectIndex = index;
     },
@@ -134,10 +200,11 @@ export default Vue.extend({
     },
     async currentData(id) {
       let res = await http({
-        url: "course/play/" + id
+        url: "course/" + id
       });
       if (res.data.status === 0) {
         this.course_detail = res.data.message;
+        this.menus[2] = `评价(${this.course_detail.commentTotal})`;
       }
     }
   },

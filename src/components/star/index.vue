@@ -22,37 +22,41 @@
 </template>
 
 <script lang="ts">
-  import Vue from "vue";
-  export default Vue.extend({
-    props: {
-      score: {
-        type: Number,
-        // default: 0
-        required:true
-      }
+import Vue from "vue";
+export default Vue.extend({
+  props: {
+    score: {
+      type: Number,
+      // default: 0
+      required: true
     },
-    data(){
-      return{
-        myScore:0
-      }
-    },
-    onReady(){
-      this.myScore=this.score
-    },
-   
-    methods:{
+    isChange: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      myScore: 0
+    };
+  },
+  created() {
+    setTimeout(() => {
+      this.myScore = this.score;
+      console.log(this.myScore);
+    }, 200);
+  },
 
-    star(index){
+  methods: {
+    star(index) {
       // console.log(7474)
       // console.log(index)
-      this.myScore=index+1
-      this.$emit("changeStar",this.myScore)
+      if (!this.isChange) return;
+      this.myScore = index + 1;
+      this.$emit("changeStar", this.myScore);
     }
-    }
-    
-
-  });
-
+  }
+});
 </script>
 <style lang="less" scoped>
 .container {
