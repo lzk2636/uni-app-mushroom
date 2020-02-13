@@ -18,7 +18,7 @@ import { http } from '../../utils/http.js';
 export default Vue.extend({
   data() {
     return {
-      phone:"18922899649",
+      phone:"17704051019",
       vcode:"",
       tips:"获取验证码",
       count:10,

@@ -38,6 +38,12 @@
       "path": "pages/play/index"
     },
     {
+      "path":"pages/pay/index",
+      "style":{
+        "navigationBarTitleText": "支付"
+      }
+    },
+    {
       "path": "pages/my/index",
       "style": {
         "navigationBarTitleText": "我的",

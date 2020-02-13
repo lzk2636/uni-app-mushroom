@@ -43,7 +43,7 @@ export default Vue.extend({
   created() {
     setTimeout(() => {
       this.myScore = this.score;
-      console.log(this.myScore);
+      // console.log(this.myScore);
     }, 200);
   },
 
