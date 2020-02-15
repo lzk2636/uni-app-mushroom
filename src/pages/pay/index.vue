@@ -9,7 +9,7 @@
       <view class="price">￥{{price}}</view>
     </view>
     <view class="pay-style">
-       <view>支付方式</view>
+      <view>支付方式</view>
       <view class="wx-pay">
         <image src="/static/images/wx_pay_logo@2x.png" alt />
         <view class="name">
@@ -30,25 +30,78 @@
   </view>
 </template>
 <script lang="ts">
-import Vue from 'vue'
+import Vue from "vue";
+import { http } from "@/utils/http";
 export default Vue.extend({
-  data(){
-    return{
-      cover_image_url:null,
-      title:null,
-      price:null,
-      id:0
-    }
+  data() {
+    return {
+      cover_image_url: null,
+      title: null,
+      price: null,
+      id: 0
+    };
   },
-  onLoad(options){
+  onLoad(options) {
     // console.log(options)
-    this.cover_image_url=options.imageUrl
-    this.price=options.price
-    this.title=options.title
-    this.id=options.id
-
-  }  
-})
+    this.cover_image_url = options.imageUrl;
+    this.price = options.price;
+    this.title = options.title;
+    this.id = options.id;
+  },
+  methods: {
+    // 支付方法
+    async orderAndPay() {
+      // 创建订单
+      const res = await http({
+        url: "order/create",
+        method: "POST",
+        data: {
+          course_id: this.id,
+          price: this.price
+        }
+      });
+      if (res.data.status === 0) {
+        console.log(res);
+        this.ICanPay(res.data.order_id);
+      }
+    },
+    async ICanPay(order_id) {
+      // setTimeout(async() => {
+      uni.showModal({
+        title: "支付信息",
+        content: `${this.title} 需要支付${this.price}元`,
+        confirmText: "确认",
+        confirmColor: "#ff8d43",
+        success:async (res) => {
+          if (res.confirm) {
+            const res = await http({
+              url:"order/pay",
+              method:"POST",
+              data:{
+                order_id
+              }
+            });
+              uni.showLoading({
+                title:"支付中......"
+              })
+              if(res.data.status===0){
+                uni.showToast({
+                  title:"支付成功",
+                  duration:3000,
+                  complete:()=>{
+                    setTimeout(() => {
+                      uni.navigateBack()
+                      uni.hideLoading()
+                    }, 3000);
+                  }
+                })
+              }
+          }
+        }
+      });
+    }
+  }
+});
 </script>
 <style lang="less" scoped>
 .pay-container {
