@@ -2,7 +2,7 @@
   <view class="play-container">
       <view class="cover_image">
         <image :src="noFindImage" v-if="playUrl==''"></image>
-        <video  :src="playUrl" controls id="player" ></video>
+        <video  :src="playUrl" controls id="player" @play="playVideoFirst" ></video>
       </view>
       <view class="introduction"> 
         <view class="title-and-info">
@@ -52,7 +52,8 @@ export default Vue.extend({
       id:null,
       courseDetails:{},
       playUrl :"",
-      activeIndex:0
+      activeIndex:0,
+      isCheckUser:false
     }
   },
   computed:{
@@ -80,6 +81,10 @@ export default Vue.extend({
     }
   },
   methods:{
+    // 首次播放第一个视屏
+    playVideoFirst(){
+      !this.isCheckUser &&  this.selectCourse(0)
+    },
     async currentData(){
       let res =await http({
         url:`course/play/${this.id}`
@@ -123,6 +128,7 @@ export default Vue.extend({
       setTimeout(() => {
         uni.createVideoContext("player").play()
       }, 200);
+      this.studyVedios(index)
    
     },
     async PayFor(){
@@ -134,7 +140,9 @@ export default Vue.extend({
       })
       if(res.data.status===0){
         if(res.data.message.pay_status===1){
+          this.isCheckUser=true
          return  Promise.resolve(true)
+
         }else{
           return Promise.resolve(false)
         }
@@ -143,6 +151,19 @@ export default Vue.extend({
       }
       // console.log(res)
 
+    },
+    async studyVedios(index){
+      const res = await http({
+        url:"study/video",
+        method:"POST",
+        data:{
+          course_id:this.id,
+          video_id:this.courseDetails.videos[index].id
+        }
+      })
+      if(res.data.status===0){
+        this.courseDetails.videos[index].is_study=1
+      }
     }
   }
 

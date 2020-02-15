@@ -117,6 +117,10 @@ export default Vue.extend({
     this.id = options.id;
     this.currentData(this.id);
   },
+  onHide() {
+    console.log("---onHide---");
+   
+  },
   methods: {
     async like(item) {
       // console.log(id,is_like)
@@ -180,9 +184,13 @@ export default Vue.extend({
       this.selectIndex = index;
     },
     goToStudy() {
-      uni.navigateTo({
-        url:"/pages/play/index?id="+this.id
-      })
+       uni.createVideoContext("courseVideoId") &&
+      uni.createVideoContext("courseVideoId").pause();
+      // setTimeout(() => {
+        uni.navigateTo({
+          url: "/pages/play/index?id=" + this.id
+        });
+      // }, 200);
     },
     // 播放视频
     playCourseVideo() {
