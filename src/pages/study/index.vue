@@ -47,11 +47,11 @@ export default Vue.extend({
       });
       if (res.data.status === 0) {
         this.studyProgresses = res.data.message;
-        Vue.nextTick(()=>{
-          this.$refs.circleList && this.$refs.circleList.forEach(element => {
-              element.draw()
-          });
-        })
+        // Vue.nextTick(()=>{
+        //   this.$refs.circleList && this.$refs.circleList.forEach(element => {
+        //       element.draw()
+        //   });
+        // })
       }
     }
   }

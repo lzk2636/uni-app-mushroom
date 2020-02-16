@@ -16,8 +16,14 @@
           </view>
         </view>
         <view class="comment">
-          <image src="/static/images/evaluate@2x.png"></image>
+          <image src="/static/images/evaluate@2x.png" @click="commentCourse"></image>
         </view>
+          <!-- 课程评价组件 -->
+        <Model :visible="visible" @closeModal="closeModal" class="comment-content" @postComment="postComment">
+          <label>输入内容:</label><textarea  rows="3" cols="3" v-model="content"></textarea>
+          <label>评分:</label><star :score="score" :isChange="true" @changeStar="changeStar"></star>
+
+        </Model>
         
       </view>
       <view class="course-progress">
@@ -42,7 +48,13 @@
 <script lang="ts">
 import Vue from "vue";
 import { http } from '../../utils/http';
+import Model from '@/components/Model/index.vue'
+import star from '@/components/star/index.vue'
 export default Vue.extend({
+  components:{
+    Model,
+    star
+  },
   onLoad(options){
     this.id=options.id
     this.currentData()
@@ -53,7 +65,10 @@ export default Vue.extend({
       courseDetails:{},
       playUrl :"",
       activeIndex:0,
-      isCheckUser:false
+      isCheckUser:false,
+      visible:false,
+      score:0,
+      content:""
     }
   },
   computed:{
@@ -81,6 +96,46 @@ export default Vue.extend({
     }
   },
   methods:{
+    // 评论发表
+    async postComment(){
+      if(this.content.trim().length===0){
+         uni.showToast({
+          title:"内容不能为空",
+          icon:"none",
+          duration:500
+        })
+        return
+      }
+      const res = await http({
+        url:"comment/create",
+        method:"POST",
+        data:{
+          course_id:this.id,
+          content:this.content,
+          score:this.score
+        }
+      })
+      if(res.data.status===0){
+        uni.showToast({
+          title:res.data.message,
+          icon:"none",
+          duration:500
+        })
+        this.visible=false
+        setTimeout(()=>{
+          uni.navigateBack()
+
+        },500)
+      }
+    },
+    // 星星score
+    changeStar(num){
+      this.score=num
+    },
+    // 关闭model
+    closeModal(visible){
+      this.visible=visible
+    },
     // 首次播放第一个视屏
     playVideoFirst(){
       !this.isCheckUser &&  this.selectCourse(0)
@@ -164,6 +219,30 @@ export default Vue.extend({
       if(res.data.status===0){
         console.log('is_study','--------------')
         this.courseDetails.videos[index].is_study=1
+      }
+    },
+
+    async commentCourse(){
+      const res=await http({
+        url:"study/complete",
+        // method:"POST",
+        data:{
+          course_id:this.id
+        }
+      })
+      // console.log(res)
+      if(res.data.status===0){
+      if(!res.data.complete){
+        uni.showModal({
+          title:"温馨提示",
+          content:"课程未学完",
+          confirmText:"去学习",
+          confirmColor:"#ffc107",
+          showCancel:false
+        })
+        return
+      }
+      this.visible=true
       }
     }
   }

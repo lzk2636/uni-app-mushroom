@@ -94,12 +94,14 @@
         </view>
       </view>
     </view>
+    <!-- <Modal></Modal> -->
   </view>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { http } from "../../utils/http";
 import star from "@/components/star";
+// import Model from '@/components/Model/index.vue'
 export default Vue.extend({
   components: {
     star
@@ -115,7 +117,10 @@ export default Vue.extend({
   },
   onLoad(options) {
     this.id = options.id;
+  },
+  onShow(){
     this.currentData(this.id);
+
   },
   onHide() {
     console.log("---onHide---");

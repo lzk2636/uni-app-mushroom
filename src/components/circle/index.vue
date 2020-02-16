@@ -22,19 +22,19 @@ export default Vue.extend({
       default: 50
     }
   },
-  // mounted(){
-  //   this.draw()
-  // },
-  // watch:{
-  //   progress(newValue,oldValue){
-  //     if(newValue!==oldValue){
-  //       this.draw()
-  //     }
-  //   }
-  // },
+  mounted(){
+    this.draw()
+  },
+  watch:{
+    progress(newValue,oldValue){
+      if(newValue!==oldValue){
+        this.draw()
+      }
+    }
+  },
   methods:{
     draw(){
-      console.log('--draw()--')
+      // console.log('--draw()--')
     var context = uni.createCanvasContext(this.canvasId, this);
     context.setStrokeStyle("#eeeeee");
     context.setLineWidth(5);
