@@ -1,7 +1,7 @@
 <template>
 	<view class="course-container">
-  <view class="course-item" v-for="(item, index) in couseres" :key="index">
-			<image :src="item.icon" @click="ImageUrl(item.icon)"></image>
+  <view class="course-item" v-for="(item, index) in couseres" :key="index" @click="toStudy(item.id)">
+			<image :src="item.icon" @click.stop="ImageUrl(item.icon)"></image>
 			<view class="title">{{item.title}}</view>
 			<view class="desc">{{item.subtitle}}</view>
 			<button plain size="mini">{{['初级','中级','高级'][item.level-1]}}</button>
@@ -20,8 +20,16 @@ export default Vue.extend({
     }
   },
   methods: {
-    ImageUrl(){
+    ImageUrl(url){
+      uni.previewImage({
+        urls:[url]
+      })
 
+    },
+    toStudy(id){
+      uni.navigateTo({
+        url:"/pages/course-details/index?id="+id
+      })
     }
   },
 

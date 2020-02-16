@@ -94,13 +94,12 @@ export default Vue.extend({
         this.courseDetails=res.data.message
         this.noFindImage=this.courseDetails.videos[0].cover_photo_url
         this.playUrl=this.courseDetails.videos[0].video_url
-        // console.log(this.courseDetails.videos[0].is_study)
+       
       }
     },
     async selectCourse(index){
      uni.createVideoContext("player").pause()
     const checkIsPay= await this.PayFor()
-    console.log(checkIsPay,'----------------')
     if(!checkIsPay){
       // 未支付去支付
       uni.showModal({
@@ -125,10 +124,11 @@ export default Vue.extend({
       // 播放
       this.activeIndex=index
       this.playUrl=this.courseDetails.videos[index].video_url
+      // this.courseDetails.videos[index].is_study=1
+      this.studyVedios(index)
       setTimeout(() => {
         uni.createVideoContext("player").play()
       }, 200);
-      this.studyVedios(index)
    
     },
     async PayFor(){
@@ -162,6 +162,7 @@ export default Vue.extend({
         }
       })
       if(res.data.status===0){
+        console.log('is_study','--------------')
         this.courseDetails.videos[index].is_study=1
       }
     }

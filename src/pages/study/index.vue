@@ -9,6 +9,7 @@
       </view>
       <view class="circle">
         <circle
+          ref="circleList"
           :canvasId="item.sid"
           :progress="item.study_progress"
           :width="55"
@@ -46,6 +47,11 @@ export default Vue.extend({
       });
       if (res.data.status === 0) {
         this.studyProgresses = res.data.message;
+        Vue.nextTick(()=>{
+          this.$refs.circleList && this.$refs.circleList.forEach(element => {
+              element.draw()
+          });
+        })
       }
     }
   }

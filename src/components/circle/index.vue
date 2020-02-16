@@ -22,7 +22,19 @@ export default Vue.extend({
       default: 50
     }
   },
-  onReady() {
+  // mounted(){
+  //   this.draw()
+  // },
+  // watch:{
+  //   progress(newValue,oldValue){
+  //     if(newValue!==oldValue){
+  //       this.draw()
+  //     }
+  //   }
+  // },
+  methods:{
+    draw(){
+      console.log('--draw()--')
     var context = uni.createCanvasContext(this.canvasId, this);
     context.setStrokeStyle("#eeeeee");
     context.setLineWidth(5);
@@ -51,7 +63,10 @@ export default Vue.extend({
     context.fillText(this.progress+"%",this.width/2-10,this.height/2+3)
     context.stroke()
     context.draw();
-  }
+  // }
+    }
+  },
+ 
 });
 </script>
 <style>
